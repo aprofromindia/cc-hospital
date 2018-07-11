@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,9 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PatientTest {
 
     @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
+    public static Object[][] data() {
+        return new Object[][]{
                 {Patient.HealthStatus.F, Collections.singletonList(Patient.Medicine.P),
+                        Patient.HealthStatus.H},
+                {Patient.HealthStatus.H, Collections.singletonList(Patient.Medicine.P),
                         Patient.HealthStatus.H},
                 {Patient.HealthStatus.F, Collections.singletonList(Patient.Medicine.As),
                         Patient.HealthStatus.H},
@@ -32,26 +33,26 @@ public class PatientTest {
                 {Patient.HealthStatus.H, Arrays.asList(Patient.Medicine.P, Patient.Medicine.As,
                         Patient.Medicine.I, Patient.Medicine.As),
                         Patient.HealthStatus.X},
-        });
+        };
     }
 
     @Parameterized.Parameter
     public Patient.HealthStatus given;
 
     @Parameterized.Parameter(1)
-    public List<Patient.Medicine> when;
+    public List<Patient.Medicine> given2;
 
     @Parameterized.Parameter(2)
     public Patient.HealthStatus then;
 
 
     @Test
-    public void test_status_with_medicine() {
+    public void test_status_with_medicines() {
         // given
         final Patient patient = new Patient(given);
 
         // when
-        Patient.HealthStatus status = patient.treat(when);
+        final Patient.HealthStatus status = patient.treat(given2);
 
         // then
         assertThat(status).isEqualByComparingTo(then);

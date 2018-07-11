@@ -20,7 +20,6 @@ public class Patient {
     public HealthStatus treat(@NonNull final List<Medicine> medicines) {
         final Map<Medicine, HealthStatus> minStatusMap = new HashMap<>(MIX_MED_SIZE);
         HealthStatus currentStatus = status;
-        boolean treated = false;
 
         for (final Medicine med : medicines) {
             if (currentStatus == X) return X;
@@ -30,16 +29,14 @@ public class Patient {
             if (minStatusMap.containsKey(med)) {
                 currentStatus = currentStatus.ordinal - minStatusMap.get(med).ordinal > 0 ?
                         currentStatus : minStatusMap.get(med);
-                treated = false;
             }
 
             if (currentStatus.medicines.contains(med)) {
                 currentStatus = currentStatus.resultStatus;
-                treated = true;
             }
         }
 
-        if (treated) return currentStatus;
+        if (currentStatus == H || currentStatus == D) return currentStatus;
         else return X;
     }
 
